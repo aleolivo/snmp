@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[filter "interpreted"]
+	smudge = "TAGNAME=$(git describe); sed \"s/\\(.*\\)\\$Name: *\\$\\(.*\\)/\\1\\$Name: $TAGNAME \\$\\2/\""
+	clean = "sed 's/\\(.*\\)$Name:.*$\\(.*\\)/\\1$Name:  $\\2/'"
+[filter "compiled"]
+	smudge = sed \"s/\\(.*\\)\\$Name: *\\$\\(.*\\)/\\1\\$Name: \\\" RELEASE_STRING \\\" \\$\\2/\"
+	clean = "sed 's/\\(.*\\)$Name:.*$\\(.*\\)/\\1$Name:  $\\2/'"
