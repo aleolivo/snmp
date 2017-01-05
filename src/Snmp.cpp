@@ -277,7 +277,7 @@ void Snmp::get_device_property()
 	{
 		mandatoryNotDefined = true;
 		set_state(Tango::FAULT);
-		set_status("Community property is mandatory with SNMP version 1.");
+		set_status("Community property is mandatory with SNMP version 1 and 2.");
 	}
 
 	if (version == 3 && (username.size() == 0 || passphrase.size() == 0))
@@ -470,7 +470,7 @@ Tango::DevVarStringArray *Snmp::get(const Tango::DevVarLongStringArray *argin)
 		case SNMP_ERR_UNDOFAILED:
 		case SNMP_ERR_AUTHORIZATIONERROR:
 		case SNMP_ERR_INCONSISTENTNAME:
-			ERROR_STREAM << "PDU Error: " << response->errstat << endl;
+			ERROR_STREAM << "SNMP protocol data unit Error: " << response->errstat << endl;
 			snmp_free_pdu(response);
 			throw_exception("Error");
 			break;
@@ -593,7 +593,7 @@ void Snmp::set(const Tango::DevVarLongStringArray *argin)
 		case SNMP_ERR_UNDOFAILED:
 		case SNMP_ERR_AUTHORIZATIONERROR:
 		case SNMP_ERR_INCONSISTENTNAME:
-			ERROR_STREAM << "PDU Error: " << response->errstat << endl;
+			ERROR_STREAM << "SNMP protocol data unit Error: " << response->errstat << endl;
 			snmp_free_pdu(response);
 			throw_exception("Error");
 			break;
