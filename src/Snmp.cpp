@@ -326,7 +326,7 @@ void Snmp::check_mandatory_property(Tango::DbDatum &class_prop, Tango::DbDatum &
 //--------------------------------------------------------
 void Snmp::always_executed_hook()
 {
-	INFO_STREAM << "Snmp::always_executed_hook()  " << device_name << endl;
+	DEBUG_STREAM << "Snmp::always_executed_hook()  " << device_name << endl;
 	if (mandatoryNotDefined)
 	{
 		string	status(get_status());
@@ -639,6 +639,21 @@ void Snmp::set(const Tango::DevVarLongStringArray *argin)
 	set_status("The device is in ON state.");
 	
 	/*----- PROTECTED REGION END -----*/	//	Snmp::set
+}
+//--------------------------------------------------------
+/**
+ *	Method      : Snmp::add_dynamic_commands()
+ *	Description : Create the dynamic commands if any
+ *                for specified device.
+ */
+//--------------------------------------------------------
+void Snmp::add_dynamic_commands()
+{
+	/*----- PROTECTED REGION ID(Snmp::add_dynamic_commands) ENABLED START -----*/
+	
+	//	Add your own code to create and add dynamic commands if any
+	
+	/*----- PROTECTED REGION END -----*/	//	Snmp::add_dynamic_commands
 }
 
 /*----- PROTECTED REGION ID(Snmp::namespace_ending) ENABLED START -----*/

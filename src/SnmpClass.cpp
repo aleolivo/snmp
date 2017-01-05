@@ -142,8 +142,8 @@ SnmpClass *SnmpClass::init(const char *name)
 		catch (bad_alloc &)
 		{
 			throw;
-		}		
-	}		
+		}
+	}
 	return _instance;
 }
 
@@ -506,7 +506,7 @@ void SnmpClass::device_factory(const Tango::DevVarStringArray *devlist_ptr)
 	for (unsigned long i=0 ; i<devlist_ptr->length() ; i++)
 	{
 		cout4 << "Device name : " << (*devlist_ptr)[i].in() << endl;
-		device_list.push_back(new Snmp(this, (*devlist_ptr)[i]));							 
+		device_list.push_back(new Snmp(this, (*devlist_ptr)[i]));
 	}
 
 	//	Manage dynamic attributes if any
@@ -518,7 +518,6 @@ void SnmpClass::device_factory(const Tango::DevVarStringArray *devlist_ptr)
 		//	Add dynamic attributes if any
 		Snmp *dev = static_cast<Snmp *>(device_list[device_list.size()-i]);
 		dev->add_dynamic_attributes();
-		dev->add_dynamic_commands();
 
 		//	Check before if database used.
 		if ((Tango::Util::_UseDb == true) && (Tango::Util::_FileDb == false))
@@ -540,13 +539,14 @@ void SnmpClass::device_factory(const Tango::DevVarStringArray *devlist_ptr)
  *                and store them in the attribute list
  */
 //--------------------------------------------------------
-void SnmpClass::attribute_factory(TANGO_UNUSED(vector<Tango::Attr *> &att_list))
+void SnmpClass::attribute_factory(vector<Tango::Attr *> &att_list)
 {
 	/*----- PROTECTED REGION ID(SnmpClass::attribute_factory_before) ENABLED START -----*/
 	
 	//	Add your own code
 	
 	/*----- PROTECTED REGION END -----*/	//	SnmpClass::attribute_factory_before
+
 	//	Create a list of static attributes
 	create_static_attribute_list(get_class_attr()->get_attr_list());
 	/*----- PROTECTED REGION ID(SnmpClass::attribute_factory_after) ENABLED START -----*/
@@ -554,6 +554,26 @@ void SnmpClass::attribute_factory(TANGO_UNUSED(vector<Tango::Attr *> &att_list))
 	//	Add your own code
 	
 	/*----- PROTECTED REGION END -----*/	//	SnmpClass::attribute_factory_after
+}
+//--------------------------------------------------------
+/**
+ *	Method      : SnmpClass::pipe_factory()
+ *	Description : Create the pipe object(s)
+ *                and store them in the pipe list
+ */
+//--------------------------------------------------------
+void SnmpClass::pipe_factory()
+{
+	/*----- PROTECTED REGION ID(SnmpClass::pipe_factory_before) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	SnmpClass::pipe_factory_before
+	/*----- PROTECTED REGION ID(SnmpClass::pipe_factory_after) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	SnmpClass::pipe_factory_after
 }
 //--------------------------------------------------------
 /**
@@ -605,7 +625,7 @@ void SnmpClass::command_factory()
  * method : 		SnmpClass::create_static_attribute_list
  * description : 	Create the a list of static attributes
  *
- * @param	att_list	the ceated attribute list 
+ * @param	att_list	the ceated attribute list
  */
 //--------------------------------------------------------
 void SnmpClass::create_static_attribute_list(vector<Tango::Attr *> &att_list)
@@ -639,10 +659,10 @@ void SnmpClass::erase_dynamic_attributes(const Tango::DevVarStringArray *devlist
 	Tango::Util *tg = Tango::Util::instance();
 
 	for (unsigned long i=0 ; i<devlist_ptr->length() ; i++)
-	{	
+	{
 		Tango::DeviceImpl *dev_impl = tg->get_device_by_name(((string)(*devlist_ptr)[i]).c_str());
 		Snmp *dev = static_cast<Snmp *> (dev_impl);
-		
+
 		vector<Tango::Attribute *> &dev_att_list = dev->get_device_attr()->get_attribute_list();
 		vector<Tango::Attribute *>::iterator ite_att;
 		for (ite_att=dev_att_list.begin() ; ite_att != dev_att_list.end() ; ++ite_att)
@@ -674,7 +694,7 @@ void SnmpClass::erase_dynamic_attributes(const Tango::DevVarStringArray *devlist
 Tango::Attr *SnmpClass::get_attr_object_by_name(vector<Tango::Attr *> &att_list, string attname)
 {
 	vector<Tango::Attr *>::iterator it;
-	for (it=att_list.begin() ; it<att_list.end() ; it++)
+	for (it=att_list.begin() ; it<att_list.end() ; ++it)
 		if ((*it)->get_name()==attname)
 			return (*it);
 	//	Attr does not exist

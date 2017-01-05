@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
-  <classes name="Snmp" pogoRevision="8.4">
-    <description description="" title="" sourcePath="/home/alessio/WIP/fermi/servers/snmp/src" language="Cpp" filestogenerate="XMI   file,Code files" license="GPL" hasMandatoryProperty="true" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false">
+  <classes name="Snmp" pogoRevision="9.1">
+    <description description="" title="" sourcePath="/home/alessandro/gitdevel/fermi/servers/snmp/src" language="Cpp" filestogenerate="XMI   file,Code files,Protected Regions" license="GPL" hasMandatoryProperty="true" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at elettra.eu> - Alessio Igor Bogani &lt;alessio.bogani" author="Alessio Igor Bogani &lt;alessio.bogani" emailDomain="elettra.eu>" classFamily="Communication" siteSpecific="" platform="Unix Like" bus="Not Applicable" manufacturer="none" reference=""/>
     </description>
@@ -61,6 +61,6 @@
       </argout>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>
-    <preferences docHome="./doc_html" makefileHome="/usr/local/tango-8.1.2.c/share/pogo/preferences"/>
+    <preferences docHome="./doc_html" makefileHome="/usr/local/tango-9.2.2/share/pogo/preferences"/>
   </classes>
 </pogoDsl:PogoSystem>

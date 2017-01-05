@@ -108,7 +108,7 @@ public:
 	Snmp(Tango::DeviceClass *cl,const char *s,const char *d);
 	/**
 	 * The device object destructor.
-	 */	
+	 */
 	~Snmp() {delete_device();};
 
 
@@ -157,6 +157,7 @@ public:
 
 
 
+
 //	Command related methods
 public:
 	/**
@@ -184,7 +185,7 @@ public:
 	 *	Description : Add dynamic commands if any.
 	 */
 	//--------------------------------------------------------
-	void add_dynamic_commands() {}
+	void add_dynamic_commands();
 
 /*----- PROTECTED REGION ID(Snmp::Additional Method prototypes) ENABLED START -----*/
 
