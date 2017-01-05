@@ -108,7 +108,7 @@ public:
 	Snmp(Tango::DeviceClass *cl,const char *s,const char *d);
 	/**
 	 * The device object destructor.
-	 */	
+	 */
 	~Snmp() {delete_device();};
 
 
@@ -157,6 +157,7 @@ public:
 
 
 
+
 //	Command related methods
 public:
 	/**
@@ -173,8 +174,9 @@ public:
 	 *	Description: 
 	 *
 	 *	@param argin 
+	 *	@returns 
 	 */
-	virtual void set(const Tango::DevVarLongStringArray *argin);
+	virtual Tango::DevVarStringArray *set(const Tango::DevVarLongStringArray *argin);
 	virtual bool is_Set_allowed(const CORBA::Any &any);
 
 
@@ -184,7 +186,7 @@ public:
 	 *	Description : Add dynamic commands if any.
 	 */
 	//--------------------------------------------------------
-	void add_dynamic_commands() {}
+	void add_dynamic_commands();
 
 /*----- PROTECTED REGION ID(Snmp::Additional Method prototypes) ENABLED START -----*/
 

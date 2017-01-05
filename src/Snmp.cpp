@@ -277,7 +277,7 @@ void Snmp::get_device_property()
 	{
 		mandatoryNotDefined = true;
 		set_state(Tango::FAULT);
-		set_status("Community property is mandatory with SNMP version 1.");
+		set_status("Community property is mandatory with SNMP version 1 and 2.");
 	}
 
 	if (version == 3 && (username.size() == 0 || passphrase.size() == 0))
@@ -326,7 +326,7 @@ void Snmp::check_mandatory_property(Tango::DbDatum &class_prop, Tango::DbDatum &
 //--------------------------------------------------------
 void Snmp::always_executed_hook()
 {
-	INFO_STREAM << "Snmp::always_executed_hook()  " << device_name << endl;
+	DEBUG_STREAM << "Snmp::always_executed_hook()  " << device_name << endl;
 	if (mandatoryNotDefined)
 	{
 		string	status(get_status());
@@ -470,7 +470,7 @@ Tango::DevVarStringArray *Snmp::get(const Tango::DevVarLongStringArray *argin)
 		case SNMP_ERR_UNDOFAILED:
 		case SNMP_ERR_AUTHORIZATIONERROR:
 		case SNMP_ERR_INCONSISTENTNAME:
-			ERROR_STREAM << "PDU Error: " << response->errstat << endl;
+			ERROR_STREAM << "SNMP protocol data unit Error: " << response->errstat << endl;
 			snmp_free_pdu(response);
 			throw_exception("Error");
 			break;
@@ -514,10 +514,12 @@ Tango::DevVarStringArray *Snmp::get(const Tango::DevVarLongStringArray *argin)
  *	Description: 
  *
  *	@param argin 
+ *	@returns 
  */
 //--------------------------------------------------------
-void Snmp::set(const Tango::DevVarLongStringArray *argin)
+Tango::DevVarStringArray *Snmp::set(const Tango::DevVarLongStringArray *argin)
 {
+	Tango::DevVarStringArray *argout;
 	DEBUG_STREAM << "Snmp::Set()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(Snmp::set) ENABLED START -----*/
 	
@@ -593,7 +595,7 @@ void Snmp::set(const Tango::DevVarLongStringArray *argin)
 		case SNMP_ERR_UNDOFAILED:
 		case SNMP_ERR_AUTHORIZATIONERROR:
 		case SNMP_ERR_INCONSISTENTNAME:
-			ERROR_STREAM << "PDU Error: " << response->errstat << endl;
+			ERROR_STREAM << "SNMP protocol data unit Error: " << response->errstat << endl;
 			snmp_free_pdu(response);
 			throw_exception("Error");
 			break;
@@ -601,44 +603,50 @@ void Snmp::set(const Tango::DevVarLongStringArray *argin)
 			assert(false);
 	}
 
-	bool mismatch = false;
-	int j = 1;
+	argout = new Tango::DevVarStringArray();
+	argout->length(items);
+	int i = 0;
 	for(variable_list *vars = response->variables; vars;
 			vars = vars->next_variable)
 	{
-		int len;
 		char buff[1024];
-		snprint_value(buff, sizeof(buff), vars->name,
+		int cp = snprint_value(buff, sizeof(buff), vars->name,
 				vars->name_length, vars);
+				
+		if (cp == -1)
+		{
+			delete argout;
+			snmp_free_pdu(response);
+			throw_exception("Buffer overflow");
+		}
 
 		DEBUG_STREAM << "Snmp::set() "
 			<< "Received " << string(buff) << endl;
-
-		len = strlen(buff);
-		if (buff[0] == '"' && buff[len-1] == '"') {
-			/* AcpPdu returns strings enclosed by " i.e. "Reply" */
-			if (strncmp(buff+1, argin->svalue[j], len-2) != 0)
-				mismatch = true;
-		} else {
-			/* RaritanPdu returns normal strings */
-			if (strncmp(buff, argin->svalue[j], len) != 0)
-				mismatch = true;
-		}
-
-		j+=2;
+		(*argout)[i++] = CORBA::string_dup(buff);		
 	}
 
 	snmp_free_pdu(response);
-
-	if (mismatch)
-		Tango::Except::throw_exception( "",
-				"Data written mismatch",
-				"Snmp::set()");
 
 	set_state(Tango::ON);
 	set_status("The device is in ON state.");
 	
 	/*----- PROTECTED REGION END -----*/	//	Snmp::set
+	return argout;
+}
+//--------------------------------------------------------
+/**
+ *	Method      : Snmp::add_dynamic_commands()
+ *	Description : Create the dynamic commands if any
+ *                for specified device.
+ */
+//--------------------------------------------------------
+void Snmp::add_dynamic_commands()
+{
+	/*----- PROTECTED REGION ID(Snmp::add_dynamic_commands) ENABLED START -----*/
+	
+	//	Add your own code to create and add dynamic commands if any
+	
+	/*----- PROTECTED REGION END -----*/	//	Snmp::add_dynamic_commands
 }
 
 /*----- PROTECTED REGION ID(Snmp::namespace_ending) ENABLED START -----*/

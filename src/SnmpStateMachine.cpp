@@ -50,6 +50,7 @@ namespace Snmp_ns
 //		Attributes Allowed Methods
 //=================================================
 
+
 //=================================================
 //		Commands Allowed Methods
 //=================================================
@@ -83,5 +84,12 @@ bool Snmp::is_Set_allowed(TANGO_UNUSED(const CORBA::Any &any))
 	/*----- PROTECTED REGION END -----*/	//	Snmp::SetStateAllowed
 	return true;
 }
+
+
+/*----- PROTECTED REGION ID(Snmp::SnmpStateAllowed.AdditionalMethods) ENABLED START -----*/
+
+//	Additional Methods
+
+/*----- PROTECTED REGION END -----*/	//	Snmp::SnmpStateAllowed.AdditionalMethods
 
 }	//	End of namespace
