@@ -174,8 +174,9 @@ public:
 	 *	Description: 
 	 *
 	 *	@param argin 
+	 *	@returns 
 	 */
-	virtual void set(const Tango::DevVarLongStringArray *argin);
+	virtual Tango::DevVarStringArray *set(const Tango::DevVarLongStringArray *argin);
 	virtual bool is_Set_allowed(const CORBA::Any &any);
 
 

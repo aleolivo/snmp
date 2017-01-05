@@ -204,8 +204,7 @@ CORBA::Any *SetClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_an
 	cout2 << "SetClass::execute(): arrived" << endl;
 	const Tango::DevVarLongStringArray *argin;
 	extract(in_any, argin);
-	((static_cast<Snmp *>(device))->set(argin));
-	return new CORBA::Any();
+	return insert((static_cast<Snmp *>(device))->set(argin));
 }
 
 
@@ -603,7 +602,7 @@ void SnmpClass::command_factory()
 	//	Command Set
 	SetClass	*pSetCmd =
 		new SetClass("Set",
-			Tango::DEVVAR_LONGSTRINGARRAY, Tango::DEV_VOID,
+			Tango::DEVVAR_LONGSTRINGARRAY, Tango::DEVVAR_STRINGARRAY,
 			"",
 			"",
 			Tango::OPERATOR);

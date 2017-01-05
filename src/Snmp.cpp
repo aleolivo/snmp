@@ -514,10 +514,12 @@ Tango::DevVarStringArray *Snmp::get(const Tango::DevVarLongStringArray *argin)
  *	Description: 
  *
  *	@param argin 
+ *	@returns 
  */
 //--------------------------------------------------------
-void Snmp::set(const Tango::DevVarLongStringArray *argin)
+Tango::DevVarStringArray *Snmp::set(const Tango::DevVarLongStringArray *argin)
 {
+	Tango::DevVarStringArray *argout;
 	DEBUG_STREAM << "Snmp::Set()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(Snmp::set) ENABLED START -----*/
 	
@@ -601,44 +603,35 @@ void Snmp::set(const Tango::DevVarLongStringArray *argin)
 			assert(false);
 	}
 
-	bool mismatch = false;
-	int j = 1;
+	argout = new Tango::DevVarStringArray();
+	argout->length(items);
+	int i = 0;
 	for(variable_list *vars = response->variables; vars;
 			vars = vars->next_variable)
 	{
-		int len;
 		char buff[1024];
-		snprint_value(buff, sizeof(buff), vars->name,
+		int cp = snprint_value(buff, sizeof(buff), vars->name,
 				vars->name_length, vars);
+				
+		if (cp == -1)
+		{
+			delete argout;
+			snmp_free_pdu(response);
+			throw_exception("Buffer overflow");
+		}
 
 		DEBUG_STREAM << "Snmp::set() "
 			<< "Received " << string(buff) << endl;
-
-		len = strlen(buff);
-		if (buff[0] == '"' && buff[len-1] == '"') {
-			/* AcpPdu returns strings enclosed by " i.e. "Reply" */
-			if (strncmp(buff+1, argin->svalue[j], len-2) != 0)
-				mismatch = true;
-		} else {
-			/* RaritanPdu returns normal strings */
-			if (strncmp(buff, argin->svalue[j], len) != 0)
-				mismatch = true;
-		}
-
-		j+=2;
+		(*argout)[i++] = CORBA::string_dup(buff);		
 	}
 
 	snmp_free_pdu(response);
-
-	if (mismatch)
-		Tango::Except::throw_exception( "",
-				"Data written mismatch",
-				"Snmp::set()");
 
 	set_state(Tango::ON);
 	set_status("The device is in ON state.");
 	
 	/*----- PROTECTED REGION END -----*/	//	Snmp::set
+	return argout;
 }
 //--------------------------------------------------------
 /**
