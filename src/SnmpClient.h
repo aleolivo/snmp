@@ -62,14 +62,14 @@ class SnmpClient : public TANGO_BASE_CLASS
 /*----- PROTECTED REGION ID(SnmpClient::Data Members) ENABLED START -----*/
 
 //	Add your own data members
-Tango::DeviceProxy *device_proxy;
+	Tango::DeviceProxy *device_proxy;
 
 /*----- PROTECTED REGION END -----*/	//	SnmpClient::Data Members
 
 //	Device property data members
 public:
-	//	SnmpProxyName:	
-	string	snmpProxyName;
+	//	DeviceName:	
+	string	deviceName;
 	//	Timeout:	Connection timeout in milliseconds
 	Tango::DevUShort	timeout;
 
@@ -222,6 +222,17 @@ template<typename F, typename T> void convert(vector<F> &replies, vector<T> &rep
 {
 	for (size_t i = 0; i < replies.size(); i++ )
 		convert(replies[i], replies_converted[i]);
+}
+template<typename F> void convert(const F &reply, string &reply_converted)
+{
+	stringstream conv;
+	conv << reply << flush;
+	if (conv.fail())
+		Tango::Except::throw_exception(
+				"API_ConverionError",
+				"Conversion fail " + conv.str(),
+				"SnmpClient::convert()");
+	reply_converted = conv.str();
 }
 
 /*----- PROTECTED REGION END -----*/	//	SnmpClient::Additional Method prototypes

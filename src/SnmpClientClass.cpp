@@ -227,7 +227,7 @@ void SnmpClientClass::set_default_property()
 	//	Set Default Class Properties
 
 	//	Set Default device Properties
-	prop_name = "SnmpProxyName";
+	prop_name = "DeviceName";
 	prop_desc = "";
 	prop_def  = "";
 	vect_data.clear();

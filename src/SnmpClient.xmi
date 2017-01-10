@@ -5,7 +5,7 @@
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at gmail.com - alessandro.olivo89" author="alessandro.olivo89" emailDomain="gmail.com" classFamily="Communication" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="Elettra Sincrotrone" reference=""/>
     </description>
-    <deviceProperties name="SnmpProxyName" mandatory="true" description="">
+    <deviceProperties name="DeviceName" mandatory="true" description="">
       <type xsi:type="pogoDsl:StringType"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </deviceProperties>

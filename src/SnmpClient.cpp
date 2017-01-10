@@ -150,8 +150,12 @@ void SnmpClient::init_device()
 	/*----- PROTECTED REGION ID(SnmpClient::init_device) ENABLED START -----*/
 	
 	//	Initialize device
-	device_proxy = new Tango::DeviceProxy(snmpProxyName);
-	
+	try
+	{
+		device_proxy = new Tango::DeviceProxy(deviceName);
+	}
+	catch(...)
+	{}
 	/*----- PROTECTED REGION END -----*/	//	SnmpClient::init_device
 }
 
@@ -173,7 +177,7 @@ void SnmpClient::get_device_property()
 
 	//	Read device properties from database.
 	Tango::DbData	dev_prop;
-	dev_prop.push_back(Tango::DbDatum("SnmpProxyName"));
+	dev_prop.push_back(Tango::DbDatum("DeviceName"));
 	dev_prop.push_back(Tango::DbDatum("Timeout"));
 
 	//	is there at least one property to be read ?
@@ -189,16 +193,16 @@ void SnmpClient::get_device_property()
 			(static_cast<SnmpClientClass *>(get_device_class()));
 		int	i = -1;
 
-		//	Try to initialize SnmpProxyName from class property
+		//	Try to initialize DeviceName from class property
 		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  snmpProxyName;
+		if (cl_prop.is_empty()==false)	cl_prop  >>  deviceName;
 		else {
-			//	Try to initialize SnmpProxyName from default device value
+			//	Try to initialize DeviceName from default device value
 			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  snmpProxyName;
+			if (def_prop.is_empty()==false)	def_prop  >>  deviceName;
 		}
-		//	And try to extract SnmpProxyName value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  snmpProxyName;
+		//	And try to extract DeviceName value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  deviceName;
 		//	Property StartDsPath is mandatory, check if has been defined in database.
 		check_mandatory_property(cl_prop, dev_prop[i]);
 
@@ -340,7 +344,10 @@ void SnmpClient::get(const string &oid, string &reply)
 void SnmpClient::get(vector<string> &oids, vector<string> &replies)
 {
 	DEBUG_STREAM << "SnmpClient::get() - " << device_name << endl;
-		
+	
+	if(!device_proxy)
+		Tango::Except::throw_exception("device_proxy not initialized", "Snmp \"GET\" request can't be sent", "SnmpClient::get()");
+	
 	Tango::DeviceData ddin, ddout;
 	Tango::DevVarLongStringArray *dvlsa = new Tango::DevVarLongStringArray();
 	size_t oids_num = oids.size();
@@ -371,6 +378,9 @@ void SnmpClient::set(const string &oid, const string &value, const string &expec
 void SnmpClient::set(vector<string> &oids, vector<string> &values, vector<string> &expected_replies)
 {
 	DEBUG_STREAM << "SnmpClient::set() - " << device_name << endl;
+	
+	if(!device_proxy)
+		Tango::Except::throw_exception("device_proxy not initialized", "Snmp \"SET\" request can't be sent", "SnmpClient::set()");
 	
 	Tango::DeviceData ddin, ddout;
 	Tango::DevVarLongStringArray *dvlsa = new Tango::DevVarLongStringArray();
