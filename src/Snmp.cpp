@@ -680,7 +680,7 @@ void Snmp::throw_exception(const string &prepend)
 	_delete_device();
 	Tango::Except::throw_exception( "",
 			prepend + " " + errmesg,
-			"Snmp::set()");
+			"Snmp::throw_exception()");
 }
 
 void Snmp::_delete_device()
