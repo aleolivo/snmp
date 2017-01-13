@@ -191,6 +191,7 @@ public:
 /*----- PROTECTED REGION ID(Snmp::Additional Method prototypes) ENABLED START -----*/
 
 private:
+	void reload_default_mibs();
 	void get_error(netsnmp_session *sess, string &ret);
 	void throw_exception(const string &prepend = "");
 	void _delete_device();

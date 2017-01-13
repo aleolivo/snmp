@@ -149,7 +149,9 @@ void Snmp::init_device()
 		return;
 
 	/*----- PROTECTED REGION ID(Snmp::init_device) ENABLED START -----*/
-
+	
+	reload_default_mibs();
+	
 	netsnmp_session ts;
 
 	_init_device(ts);
@@ -650,6 +652,12 @@ void Snmp::add_dynamic_commands()
 }
 
 /*----- PROTECTED REGION ID(Snmp::namespace_ending) ENABLED START -----*/
+
+void Snmp::reload_default_mibs()
+{
+	shutdown_mib();
+	init_mib();
+}
 
 void Snmp::get_error(netsnmp_session *sess, string &ret)
 {
