@@ -169,6 +169,7 @@ public:
 //	Additional Method prototypes
 
 //void get(const string &oids, string &response);
+void initialize();
 
 void get(vector<string> &oids, vector<string> &replies);
 void get(const string &oid, string &reply);

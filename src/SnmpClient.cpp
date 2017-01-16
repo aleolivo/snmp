@@ -153,6 +153,9 @@ void SnmpClient::init_device()
 	try
 	{
 		device_proxy = new Tango::DeviceProxy(deviceName);
+		
+		if (Tango::Util::instance()->is_svr_starting() == false  &&	Tango::Util::instance()->is_device_restarting(device_name)==false)
+			initialize();
 	}
 	catch(...)
 	{}
@@ -332,7 +335,15 @@ void SnmpClient::add_dynamic_commands()
 /*----- PROTECTED REGION ID(SnmpClient::namespace_ending) ENABLED START -----*/
 
 //	Additional Methods
-
+void SnmpClient::initialize()
+{
+	DEBUG_STREAM << "SnmpClient::initialized() - " << device_name << endl;
+	
+	if(!device_proxy)
+		Tango::Except::throw_exception("device_proxy not initialized", "Snmp \"GET\" request can't be sent", "SnmpClient::initialized()");
+	
+	device_proxy->command_inout("Init");
+}
 
 void SnmpClient::get(const string &oid, string &reply)
 {	
