@@ -191,6 +191,14 @@ template<typename T> void get(vector<string> &oids, vector<T> &replies)
 void set(vector<string> &oids, vector<string> &values, vector<string> &expected_replies);
 void set(const string &oid, const string &value, const string &expected_reply);
 
+template<typename F> void set(const string &oid, const F &value)
+{
+	set(oid, value, value);
+}
+template<typename F> void set(vector<string> &oids, vector<F> &values)
+{
+	set(oids, values, values);
+}
 template<typename F, typename T> void set(const string &oid, const F &value, const T &expected_reply)
 {
 	string str_value, str_expected_reply;
