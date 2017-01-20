@@ -70,8 +70,6 @@ class SnmpClient : public TANGO_BASE_CLASS
 public:
 	//	DeviceName:	
 	string	deviceName;
-	//	Timeout:	Connection timeout in milliseconds
-	Tango::DevUShort	timeout;
 
 	bool	mandatoryNotDefined;
 

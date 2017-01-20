@@ -181,7 +181,6 @@ void SnmpClient::get_device_property()
 	//	Read device properties from database.
 	Tango::DbData	dev_prop;
 	dev_prop.push_back(Tango::DbDatum("DeviceName"));
-	dev_prop.push_back(Tango::DbDatum("Timeout"));
 
 	//	is there at least one property to be read ?
 	if (dev_prop.size()>0)
@@ -206,19 +205,6 @@ void SnmpClient::get_device_property()
 		}
 		//	And try to extract DeviceName value from database
 		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  deviceName;
-		//	Property StartDsPath is mandatory, check if has been defined in database.
-		check_mandatory_property(cl_prop, dev_prop[i]);
-
-		//	Try to initialize Timeout from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  timeout;
-		else {
-			//	Try to initialize Timeout from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  timeout;
-		}
-		//	And try to extract Timeout value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  timeout;
 		//	Property StartDsPath is mandatory, check if has been defined in database.
 		check_mandatory_property(cl_prop, dev_prop[i]);
 
@@ -363,7 +349,7 @@ void SnmpClient::get(vector<string> &oids, vector<string> &replies)
 	Tango::DevVarLongStringArray *dvlsa = new Tango::DevVarLongStringArray();
 	size_t oids_num = oids.size();
 	dvlsa->lvalue.length(1);
-	dvlsa->lvalue[0] = timeout;
+	dvlsa->lvalue[0] = 1500;
 	dvlsa->svalue.length(oids_num);
 	for(size_t i = 0; i < oids_num; i++)
 		dvlsa->svalue[i] = CORBA::string_dup(oids[i].c_str());
@@ -397,7 +383,7 @@ void SnmpClient::set(vector<string> &oids, vector<string> &values, vector<string
 	Tango::DevVarLongStringArray *dvlsa = new Tango::DevVarLongStringArray();
 	size_t oids_num = oids.size();
 	dvlsa->lvalue.length(1);
-	dvlsa->lvalue[0] = timeout;
+	dvlsa->lvalue[0] = 1500;
 	dvlsa->svalue.length(2 * oids_num);
 	for (size_t i = 0; i < oids_num; i++ )
 	{
