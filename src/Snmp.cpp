@@ -743,6 +743,11 @@ void Snmp::_init_device(netsnmp_session &ts)
 	SOCK_STARTUP;
 
 	ts.retries = 0;
+	
+	netsnmp_ds_set_int(NETSNMP_DS_LIBRARY_ID, 
+					   NETSNMP_DS_LIB_OID_OUTPUT_FORMAT,
+					   NETSNMP_OID_OUTPUT_NUMERIC);
+	
 	session = snmp_open(&ts);
 	
 	if (session == NULL)
